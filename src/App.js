@@ -70,7 +70,7 @@ export default class App extends React.Component {
     })
   }
 
-  countResult = (type, input1, input2) => {
+  countResult = (type = 'Sum', input1 = 0, input2 = 0) => {
     let result = 0
     if (type === 'Sum') 
       result = input1 + input2;
@@ -83,10 +83,10 @@ export default class App extends React.Component {
     this.setState({
       countedResult: result
     })
+    return result
   }
 
     isPrime = (num) => {
-      
       if (num <= 1) {
         return true
       } else if (num <= 3) {
@@ -102,7 +102,7 @@ export default class App extends React.Component {
         i += 6
       }
       return true
-}
+  }
 
 firstPrimeNumber = (input) => {
         let primes=[];
@@ -144,6 +144,29 @@ onClickType = (type) => {
   )
 }
 
+renderEquation = (type) => {
+  if(type==='Sum')
+    return '+'
+  else if(type==='Multiply')
+    return 'x'
+  else
+    return null
+}
+
+renderSecondInput = () => {
+  if(this.state.type==='Sum' || this.state.type==='Multiply')
+    return (
+        <React.Fragment>
+          <InputGroupAddon type="prepend">
+            <InputGroupText>{this.renderEquation(this.state.type)}</InputGroupText>
+          </InputGroupAddon>
+          <FormInput placeholder="Input 2" type="number" name="input2" onChange={this.onChange} value={(this.state.type==='Prime' || this.state.type === 'Fibonacci') ? '' : this.state.input2} 
+          disabled={(this.state.type==='Prime' || this.state.type === 'Fibonacci') ? true : false }/>  
+        </React.Fragment>
+      )
+  return null
+}
+
   render() {
     return (
       <div>
@@ -172,14 +195,16 @@ onClickType = (type) => {
         </Collapse>
       </Navbar>
 
-      <div style={{padding:"20px"}}>
+      <div style={{padding:'20px'}}>
+        <h1 style={{textAlign:'center'}}><b>{this.state.type.toUpperCase()}</b></h1>  
+      </div>
+      <div style={{padding:"20px 300px 0 300px"}}>
          <InputGroup className="mb-2">
-        <InputGroupAddon type="prepend">
-          <InputGroupText>{this.state.type}</InputGroupText>
-        </InputGroupAddon>
         <FormInput placeholder="Input 1" type="number" name="input1" onChange={this.onChange} value={this.state.input1} />
-        <FormInput placeholder="Input 2" type="number" name="input2" onChange={this.onChange} value={(this.state.type==='Prime' || this.state.type === 'Fibonacci') ? '' : this.state.input2} 
-        disabled={(this.state.type==='Prime' || this.state.type === 'Fibonacci') ? true : false }/>
+        {this.renderSecondInput()}
+      <InputGroupAddon type="prepend">
+            <InputGroupText>=</InputGroupText>
+          </InputGroupAddon>
         <FormInput placeholder="Result"  name="countedResult" value={this.state.countedResult} disabled={true} />
         </InputGroup>
       </div>
@@ -188,4 +213,6 @@ onClickType = (type) => {
       </div>
     );
   }
+
+
 }
